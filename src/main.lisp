@@ -3,13 +3,33 @@
 (defpackage :tna-7dtd
   (:nicknames :tna)
   (:use :cl :bordeaux-threads :cl-ppcre :telnetlib)
-  (:export +init+
-	   *master-listener-handler-thread*
-	   *master-telnet-connection*
-	   *server-address*
-	   *server-telnet-port*))
+  (:export :+init+
+	   :+unhook+
+	   :*master-listener-handler-thread*
+	   :*master-telnet-connection*
+	   :*query-telnet-connection*
+	   :*server-address*
+	   :*server-chat-tag*
+	   :*server-telnet-port*
+	   :*tna-commands*
+	   :gmsg.com/dice
+	   :gmsg-p
+	   :listener-handler
+	   :parse-gmsg-line
+	   :parse-telnet-line
+	   :process-gmsg
+	   :query-connection
+	   :server-format
+	   :server-say
+	   :server-say-format
+	   :tn-query
+	   :thread-listener))
 
 (in-package :tna-7dtd)
+
+;(defparameter *server-address* #(127 0 0 1))
+;(defparameter *server-telnet-port* 8081)
+;(defparameter *server-chat-tag* "[TNA]")
 
 (defparameter *server-address* "nydel-700-147c")
 (defparameter *server-telnet-port* 25081)
@@ -17,8 +37,10 @@
 
 (defvar *master-telnet-connection* nil)
 (defvar *master-listener-handler-thread* nil)
+(defvar *query-telnet-connection* nil)
 
-(defparameter *tna-commands* '(("//dice" . gmsg.com/dice)))
+(defparameter *tna-commands* '(("//dice" . gmsg.com/dice)
+			       ("//loc" . gmsg.query.com/loc)))
 
 (defun server-format (tn &rest format-args)
   (write-ln tn (eval (append (list 'format nil) format-args))))
@@ -39,7 +61,7 @@
   (let* ((msg-split (ppcre:split "\\s" (cadr gmsg)))
 	 (gmsga (assoc (car msg-split) *tna-commands* :test #'string-equal)))
     (when gmsga
-      (eval (append (list (cadr gmsga) tn (car gmsg)) (cdr msg-split))))))
+      (eval (append (list (cdr gmsga) tn (car gmsg)) (cdr msg-split))))))
 
 (defun parse-gmsg-line (gmsg-line)
   (register-groups-bind (name msg)
@@ -67,7 +89,38 @@
 	  (sleep 0.1)))
    :name (format nil "tna-7dtd listener ~d" (get-universal-time))))
 
+(defun query-connection (telnet-password)
+  (let ((query-tn
+	 (open-telnet-session *server-address* *server-telnet-port*)))
+    (set-telnet-session-option query-tn :remove-return-char t)
+    (read-available-data query-tn)
+    (write-ln query-tn telnet-password)
+    (read-available-data query-tn)
+    (write-ln query-tn "loglevel ALL false")
+    (read-available-data query-tn)
+    (setf *query-telnet-connection* query-tn)))
+
+(defun tn-query (query)
+  (server-format *query-telnet-connection* query)
+  (sleep 0.25)
+  (read-available-data *query-telnet-connection*))
+
+(defun parse-lp-line-for-location (line)
+  (let ((loc (register-groups-bind (x y z)
+		 ("pos=\\(([^,]+)\\,\\s([^,]+)\\,\\s([^\\)]+)\\)*" line)
+	       (list x y z))))
+    loc))
+
+(defun gmsg.query.com/loc (tn name &rest arg)
+  (declare (ignore tn arg))
+  (let* ((lp-results (tn-query "lp"))
+	 (lp-split (split "\n" lp-results))
+	 (lp-entry (remove-if-not (lambda (y) (search name y)) lp-split))
+	 (loc (parse-lp-line-for-location (car lp-entry))))
+    (server-say-format "x: ~a, y: ~a, z: ~a" (first loc) (second loc) (third loc))))
+    
 (defun +init+ (telnet-password)
+  (query-connection telnet-password)
   (let ((master-tn
 	 (open-telnet-session *server-address* *server-telnet-port*)))
     (set-telnet-session-option master-tn :remove-return-char t)
@@ -79,4 +132,9 @@
     (write-ln master-tn "loglevel INF true")
     (read-available-data master-tn)
     (setf *master-telnet-connection* master-tn))
-    (read-available-data *master-telnet-connection*))
+    (read-available-data *master-telnet-connection*)
+    (thread-listener *master-telnet-connection*))
+
+(defun +unhook+ ()
+  (close-telnet-session *master-telnet-connection*)
+  (close-telnet-session *query-telnet-connection*))
