@@ -40,7 +40,9 @@
 (defvar *query-telnet-connection* nil)
 
 (defparameter *tna-commands* '(("//dice" . gmsg.com/dice)
-			       ("//loc" . gmsg.query.com/loc)))
+			       ("//loc" . gmsg.query.com/loc)
+			       ("//minutes" . gmsg.query.com/minutes)
+			       ("//zombies" . gmsg.query.com/zombies)))
 
 (defun server-format (tn &rest format-args)
   (write-ln tn (eval (append (list 'format nil) format-args))))
@@ -114,10 +116,35 @@
 (defun gmsg.query.com/loc (tn name &rest arg)
   (declare (ignore tn arg))
   (let* ((lp-results (tn-query "lp"))
-	 (lp-split (split "\n" lp-results))
+	 (lp-split (split "\\n" lp-results))
 	 (lp-entry (remove-if-not (lambda (y) (search name y)) lp-split))
 	 (loc (parse-lp-line-for-location (car lp-entry))))
-    (server-say-format "x: ~a, y: ~a, z: ~a" (first loc) (second loc) (third loc))))
+    (server-say-format "~a is at x: ~a, y: ~a, z: ~a" name (first loc) (second loc) (third loc))))
+
+(defun gmsg.query.com/minutes (tn name &rest arg)
+  (declare (ignore tn arg))
+  (let* ((lkp-results (tn-query "lkp"))
+	 (lkp-split (split "\\n" lkp-results))
+	 (lkp-entry (remove-if-not (lambda (y) (search name y)) lkp-split))
+	 (id-playtime
+	  (register-groups-bind
+	      (id playtime)
+	      ("id=([0-9]+).*playtime=([0-9]+)" (car lkp-entry))
+	    (list id playtime)
+    (server-say-format "~a/~a has played for ~a minutes" name id playtime))))))
+
+(defun gmsg.query.com/zombies (tn name &rest arg)
+  (declare (ignore tn arg))
+  (let* ((lp-results (tn-query "lp"))
+	 (lp-split (split "\\n" lp-results))
+	 (lp-entry (remove-if-not (lambda (y) (search name y)) lp-split))
+	 (id-zombies-deaths
+	  (register-groups-bind
+	      (id deaths zombies)
+	      ("id=([0-9]+).*deaths=([0-9]+).*zombies=([0-9]+).*" (car lp-entry))
+	    (list id zombies deaths)
+    (server-say-format "~a/~a has killed ~a zombies and died ~a times" name id zombies deaths))))))
+	 
     
 (defun +init+ (telnet-password)
   (query-connection telnet-password)
