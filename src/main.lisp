@@ -59,6 +59,10 @@
 (defun server-say-format (&rest format-args)
   (server-say (eval (append (list 'format nil) format-args))))
 
+(defun clear-chat ()
+  (loop for i from 0 to 81 do
+       (server-say "----------clearing chat...----------")))
+
 (defun gmsg.com/dice (tn name &rest arg)
   (declare (ignore arg tn))
   (let ((die1 (1+ (random 6)))
@@ -196,6 +200,10 @@
 	 (lkp-entry (car lkp-line)))
 	 (parse-lkp-line lkp-entry)))
 
+(defun get-id-from-name (name)
+  (let ((lp-results (lookup-player-lp name)))
+    (when lp-results (second lp-results))))
+
 (defparameter *coins-to-begin* 50000.0)
 (defparameter *coins-per-minute* 10.0)
 (defparameter *coins-per-zombie* 75.0)
@@ -208,7 +216,9 @@
 			     ("grainalcohol" "grainAlcohol" 50)
 			     ("vegetablestew" "vegetableStew" 35)
 			     ("forgeahead" "forgeAheadBook" 500)
-			     ("supplycrate" "specialcase1" 1000)))
+			     ("supplycrate" "specialcase1" 1000)
+			     ("oilbarrel" "oilBarrel" 350)
+			     ("misosoup" "canMiso" 40)))
 
 (defun gmsg.query.com/shop (tn name &rest args)
   (declare (ignore tn name args))
@@ -301,7 +311,7 @@
 	    (server-say-format "sorry, ~a, you have insufficient funds." name)))
 	(add-player-transaction name (* -1 (third item)) (first item))
 	(if (string-equal (second item) "specialcase1")
-	    (server-format tn "se ~a ~a" name "31")
+	    (server-format tn "se ~a ~a" (get-id-from-name name) "31")
 	    (server-format tn "give ~a ~a 1" name (second item)))
 	(server-say-format "ok ~a, you've purchased a ~a for ~d coins." name (first item) (third item))))))
 
