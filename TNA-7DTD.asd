@@ -27,6 +27,7 @@
     7 Days To Die - is considered free, open-source and for fair use, as further
     defined in this package's LICENSE file."
     :depends-on (:bordeaux-threads
+		 :cl-irc
 		 :cl-ppcre
 		 :telnetlib)
     :components ((:module "data"
