@@ -215,6 +215,17 @@
 
 (defun load-player-transactions ()
   (setf *player-transactions* (&load-player-transactions)))
+
+;(defun add-player-transaction (player-name coin-value note)
+;  (let ((player-entry
+;	 (remove-if-not (lambda (y) (string-equal (car y) player-name)) *player-transactions*))
+;	(other-entries
+;	 (remove-if (lambda (y) (string-equal (car y) player-name)) *player-transactions*)))
+ ;   (if player-entry
+;	(setf *player-transactions*
+;	      (push (push (list coin-value note) player-entry) *player-transactions*))
+;	(setf *player-transactions*
+;	      (push (list player-name
 		      
 
 (defun calculate-base-coins (name)
