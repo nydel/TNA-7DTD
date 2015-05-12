@@ -45,6 +45,8 @@
 			       ("//loc" . gmsg.query.com/loc)
 			       ("//wallet" . gmsg.query.com/wallet)
 			       ("//shop" . gmsg.query.com/shop)
+			       ("//buy" . gmsg.query.com/buy)
+			       ("//pay" . gmsg.com/pay)
 			       ("//minutes" . gmsg.query.com/minutes)
 			       ("//zombies" . gmsg.query.com/zombies)))
 
@@ -200,8 +202,19 @@
 (defparameter *coins-per-death* -1000.0)
 
 (defparameter *shop-items* '(("bandage" "firstAidBandage" 25)
-			     ("another item" "blah" 100)
-			     ("yet another item" "blip" 50)))
+			     ("mininghelmet" "miningHelmet" 100)
+			     ("splint" "splint" 10)
+			     ("medkit" "firstAidKit" 250)
+			     ("grainalcohol" "grainAlcohol" 50)
+			     ("vegetablestew" "vegetableStew" 35)
+			     ("forgeahead" "forgeAheadBook" 500)
+			     ("supplycrate" "specialcase1" 1000)))
+
+(defun gmsg.query.com/shop (tn name &rest args)
+  (declare (ignore tn name args))
+  (mapcar (lambda (y)
+	    (server-say-format "item: ~a cost: ~d coins" (first y) (third y)))
+	  *shop-items*))
 
 (defvar *player-transactions* nil)
 
@@ -221,11 +234,11 @@
 ;	 (remove-if-not (lambda (y) (string-equal (car y) player-name)) *player-transactions*))
 ;	(other-entries
 ;	 (remove-if (lambda (y) (string-equal (car y) player-name)) *player-transactions*)))
- ;   (if player-entry
+;    (if player-entry
 ;	(setf *player-transactions*
-;	      (push (push (list coin-value note) player-entry) *player-transactions*))
+;	      (push (push (list coin-value note) player-entry) other-entries))
 ;	(setf *player-transactions*
-;	      (push (list player-name
+;	      (push (list player-name (list coin-value note)))))))
 		      
 
 (defun calculate-base-coins (name)
@@ -243,17 +256,60 @@
        (* *coins-per-death* (third info)))
        100)))
 
+(defun get-player-transactions (player-name)
+  (let ((player-entry (assoc player-name *player-transactions* :test #'string-equal)))
+    (when player-entry (cdr player-entry))))
+
+(defun &add-player-transaction (player-name coin-value note)
+  (let ((player-transactions (get-player-transactions player-name)))
+    (cons player-name (append (list (cons coin-value note)) player-transactions))))
+
+(defun add-player-transaction (player-name coin-value note)
+  (let ((other-players
+	 (remove-if
+	  (lambda (y) (string-equal (car y) player-name))
+	  *player-transactions*))
+	(this-player
+	 (&add-player-transaction player-name coin-value note)))
+    (setf *player-transactions*
+	  (push this-player other-players))))
+
+(defun gmsg.com/pay (tn payer &rest arg)
+  (declare (ignore tn))
+  (let* ((arg-split (split "\\s" (car arg)))
+	 (receiver (car arg-split))
+	 (coin-value (read-from-string (car (last arg-split)))))
+    (add-player-transaction payer (* -1 coin-value) (format nil "to ~a" receiver))
+    (add-player-transaction receiver coin-value (format nil "from ~a" payer))
+    (server-say-format "ok ~a, you paid ~d coins to ~a." payer coin-value receiver)))
+
+(defun calculate-modified-coins (player-name)
+  (let ((base-coins (calculate-base-coins player-name))
+	(transactions (get-player-transactions player-name))
+	(transaction-values (list 0)))
+    (when transactions
+      (setq transaction-values (mapcar (lambda (y) (car y)) transactions)))
+    (eval (append (list '+ base-coins) transaction-values))))
+
+(defun gmsg.query.com/buy (tn name &rest arg)
+  (let ((item (assoc (car arg) *shop-items* :test #'string-equal))
+	(coins-modified (calculate-modified-coins name)))
+    (when item
+      (progn
+	(when (> (third item) coins-modified)
+	  (return-from gmsg.query.com/buy
+	    (server-say-format "sorry, ~a, you have insufficient funds." name)))
+	(add-player-transaction name (* -1 (third item)) (first item))
+	(if (string-equal (second item) "specialcase1")
+	    (server-format tn "se ~a ~a" name "31")
+	    (server-format tn "give ~a ~a 1" name (second item)))
+	(server-say-format "ok ~a, you've purchased a ~a for ~d coins." name (first item) (third item))))))
+
 (defun gmsg.query.com/wallet (tn name &rest args)
   (declare (ignore tn args))
   (server-say-format "~a, you have ~d TNA coins in your wallet."
 		     name
-		     (calculate-base-coins name)))
-
-(defun gmsg.query.com/shop (tn name &rest args)
-  (declare (ignore tn name args))
-  (mapcar (lambda (y)
-	    (server-say-format "item: ~a cost: ~d coins" (first y) (third y)))
-	  *shop-items*))
+		     (calculate-modified-coins name)))
 
 (defparameter *irc-botname* "tnabot")
 (defparameter *irc-server* "irc.gamesurge.net")
