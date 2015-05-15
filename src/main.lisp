@@ -329,6 +329,14 @@
 		     name
 		     (calculate-modified-coins name)))
 
+(defvar *dayvote* nil)
+(defvar *nightvote* nil)
+
+;(defun gmsg.query.com/timevote (tn name &rest arg)
+;  (declare (ignore tn))
+;  (cond ((string-equal (car arg) "day")
+;	 (
+
 (defparameter *irc-botname* "tnabot")
 (defparameter *irc-server* "irc.gamesurge.net")
 (defparameter *irc-channel* "#tna")
