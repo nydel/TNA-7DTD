@@ -35,7 +35,8 @@
 
 (defparameter *server-address* "nydel-700-147c")
 (defparameter *server-telnet-port* 25081)
-(defparameter *server-chat-tag* "[TNA-2.0.11.4.101A]")
+;(defparameter *server-chat-tag* "[TNA-2.0.11.4.101A]")
+(defparameter *server-chat-tag* "[TNA]")
 
 (defvar *master-telnet-connection* nil)
 (defvar *master-listener-handler-thread* nil)
@@ -43,10 +44,12 @@
 
 (defparameter *tna-commands* '(("//dice" . gmsg.com/dice)
 			       ("//loc" . gmsg.query.com/loc)
-			       ("//wallet" . gmsg.query.com/wallet)
-			       ("//shop" . gmsg.query.com/shop)
-			       ("//buy" . gmsg.query.com/buy)
-			       ("//pay" . gmsg.com/pay)
+			       ("/wallet" . gmsg.query.com/wallet)
+			       ("/shop" . gmsg.query.com/shop)
+			       ("/buy" . gmsg.query.com/buy)
+			       ("/pay" . gmsg.com/pay)
+			       ("/sethome" . gmsg.com/sethome)
+			       ("/home" . gmsg.com/home)
 			       ("//minutes" . gmsg.query.com/minutes)
 			       ("//zombies" . gmsg.query.com/zombies)))
 
@@ -56,11 +59,14 @@
 (defun server-say (string &optional (tn *master-telnet-connection*))
   (server-format tn "say ~C~a~a~C" #\" *server-chat-tag* string #\"))
 
+(defun server-say-format (&rest format-args)
+  (server-say (eval (append (list 'format nil) format-args))))
+
 (defun server-pm (name string &optional (tn *master-telnet-connection*))
   (server-format tn "pm ~a ~C~a~a~C" (get-id-from-name name) #\" *server-chat-tag* string #\"))
 
-(defun server-say-format (&rest format-args)
-  (server-say (eval (append (list 'format nil) format-args))))
+(defun server-pm-format (name &rest format-args)
+  (server-pm name (eval (append (list 'format nil) format-args))))
 
 (defun clear-chat ()
   (loop for i from 0 to 81 do
@@ -135,7 +141,7 @@
 	 (lp-split (split "\\n" lp-results))
 	 (lp-entry (remove-if-not (lambda (y) (search name y)) lp-split))
 	 (loc (parse-lp-line-for-location (car lp-entry))))
-    (server-say-format "~a is at x: ~a, y: ~a, z: ~a" name (first loc) (second loc) (third loc))))
+    (server-pm-format name "you are at x: ~a, y: ~a, z: ~a" (first loc) (second loc) (third loc))))
 
 (defun gmsg.query.com/minutes (tn name &rest arg)
   (declare (ignore tn arg))
@@ -147,7 +153,7 @@
 	      (id playtime)
 	      ("id=([0-9]+).*playtime=([0-9]+)" (car lkp-entry))
 	    (list id playtime)
-    (server-say-format "~a/~a has played for ~a minutes" name id playtime))))))
+    (server-pm-format name "~a/~a has played for ~a minutes" name id playtime))))))
 
 (defun gmsg.query.com/zombies (tn name &rest arg)
   (declare (ignore tn arg))
@@ -225,39 +231,34 @@
 			     ("oilbarrel" "oilBarrel" 350)
 			     ("misosoup" "canMiso" 40)
 			     ("blip" "stick" -1000)
+			     ("blep" "stick" 1000)
 			     ("repairkit" "weaponRepairKit" 10)
 			     ("antibiotics" "antibiotics" 250)))
 
 (defun gmsg.query.com/shop (tn name &rest args)
   (declare (ignore tn name args))
   (mapcar (lambda (y)
-	    (server-say-format "item: ~a cost: ~d coins" (first y) (third y)))
+	    (server-pm-format name "item: ~a cost: ~d coins" (first y) (third y)))
 	  *shop-items*))
 
 (defvar *player-transactions* nil)
 
+(defun save-player-transactions ()
+  (when *player-transactions*
+    (with-open-file (db #P"../data/player-transactions.tna.db"
+			:direction :output
+			:if-exists :rename
+			:if-does-not-exist :create)
+      (mapcar (lambda (y) (write y :stream db)) *player-transactions*))))
+
 (defun &load-player-transactions ()
-  (with-open-file (db #P"player-transactions"
+  (with-open-file (db #P"../data/player-transactions.tna.db"
 		      :direction :input
 		      :if-does-not-exist :create)
-    (loop for line = (read-line db nil 'eof nil)
-       until (equal line 'eof)
-       collect line)))
+    (loop for entry = (read db nil 'eof) until (equal entry 'eof) collect entry)))
 
 (defun load-player-transactions ()
   (setf *player-transactions* (&load-player-transactions)))
-
-;(defun add-player-transaction (player-name coin-value note)
-;  (let ((player-entry
-;	 (remove-if-not (lambda (y) (string-equal (car y) player-name)) *player-transactions*))
-;	(other-entries
-;	 (remove-if (lambda (y) (string-equal (car y) player-name)) *player-transactions*)))
-;    (if player-entry
-;	(setf *player-transactions*
-;	      (push (push (list coin-value note) player-entry) other-entries))
-;	(setf *player-transactions*
-;	      (push (list player-name (list coin-value note)))))))
-		      
 
 (defun calculate-base-coins (name)
   (let* ((player-lp (lookup-player-lp name))
@@ -290,16 +291,36 @@
 	(this-player
 	 (&add-player-transaction player-name coin-value note)))
     (setf *player-transactions*
-	  (push this-player other-players))))
+	  (push this-player other-players))
+    (save-player-transactions)))
 
-(defun gmsg.com/pay (tn payer &rest arg)
+;(defun string-safe-to-read-p (string)
+;  (scan "[
+
+(defun gmsg.com/pay (tn name &rest arg)
   (declare (ignore tn))
-  (let* ((arg-split (split "\\s" (car arg)))
-	 (receiver (car arg-split))
-	 (coin-value (read-from-string (car (last arg-split)))))
-    (add-player-transaction payer (* -1 coin-value) (format nil "to ~a" receiver))
-    (add-player-transaction receiver coin-value (format nil "from ~a" payer))
-    (server-say-format "ok ~a, you paid ~d coins to ~a." payer coin-value receiver)))
+  (unless (eq (length arg) 2)
+    (return-from gmsg.com/pay
+      (server-pm-format name "syntax is /pay <playername> <#-of-coins>")))
+  (let* ((arg1 (car arg))
+	 (arg2 (second arg))
+	 (coins (read-from-string arg2)))
+    (when (< (calculate-modified-coins name) coins)
+      (return-from gmsg.com/pay
+	(server-pm-format name "sorry ~a, you've insufficient funds." name)))
+    (when (string-equal name arg1)
+      (return-from gmsg.com/pay
+	(server-say-format "your money's no good here, ~a says to themself." name)))
+    (add-player-transaction name (* -1 coins) arg1)
+    (add-player-transaction arg1 coins name)
+    (server-pm-format name "ok, ~a paid ~d coins to ~a." name coins arg1)
+    (server-pm-format arg1 "ok, ~a paid ~d coins to ~a." name coins arg1)))
+
+;	 (receiver (car arg-split))
+;	 (coin-value (read-from-string (car (last arg-split)))))
+;    (add-player-transaction payer (* -1 coin-value) (format nil "to ~a" receiver))
+;    (add-player-transaction receiver coin-value (format nil "from ~a" payer))
+;    (server-say-format "ok ~a, you paid ~d coins to ~a." payer coin-value receiver)))
 
 (defun calculate-modified-coins (player-name)
   (let ((base-coins (calculate-base-coins player-name))
@@ -310,24 +331,101 @@
     (eval (append (list '+ base-coins) transaction-values))))
 
 (defun gmsg.query.com/buy (tn name &rest arg)
-  (let ((item (assoc (car arg) *shop-items* :test #'string-equal))
-	(coins-modified (calculate-modified-coins name)))
+  (let* ((item (assoc (car arg) *shop-items* :test #'string-equal))
+	 (coins-modified (calculate-modified-coins name))
+	 (quantity-string (cadr arg))
+	 (quantity (if
+		    (null quantity-string)
+		    1
+		    (read-from-string quantity-string))))
     (when item
       (progn
-	(when (> (third item) coins-modified)
+	(when (> (* quantity (third item)) coins-modified)
 	  (return-from gmsg.query.com/buy
-	    (server-say-format "sorry, ~a, you have insufficient funds." name)))
-	(add-player-transaction name (* -1 (third item)) (first item))
+	    (server-pm-format name "sorry, ~a, you have insufficient funds." name)))
+	(add-player-transaction name (* -1 quantity (third item)) (first item))
 	(if (string-equal (second item) "specialcase1")
-	    (server-format tn "se ~a ~a" (get-id-from-name name) "31")
-	    (server-format tn "give ~a ~a 1" (get-id-from-name name) (second item)))
-	(server-say-format "ok ~a, you've purchased a ~a for ~d coins." name (first item) (third item))))))
+	    (loop for i from 1 to quantity collect
+		 (server-format tn "se ~a ~a" (get-id-from-name name) "31"))
+	    (server-format tn "give ~a ~a ~d" (get-id-from-name name) (second item) quantity))
+	(server-pm-format name "ok ~a, you've purchased ~d ~a for ~d coins." name quantity (first item) (* quantity (third item)))))))
 
 (defun gmsg.query.com/wallet (tn name &rest args)
   (declare (ignore tn args))
-  (server-say-format "~a, you have ~d TNA coins in your wallet."
+  (server-pm-format name "~a, you have ~d TNA coins in your wallet."
 		     name
 		     (calculate-modified-coins name)))
+
+(defvar *player-home-locations* nil)
+(defparameter *sethome-coin-cost* 75.0)
+(defparameter *home-coin-cost* 25.0)
+
+(defun save-player-home-locations ()
+  (when *player-home-locations*
+    (with-open-file (db #P"../data/player-home-locations.tna.db"
+			:direction :output
+			:if-exists :rename
+			:if-does-not-exist :create)
+      (mapcar (lambda (y) (write y :stream db)) *player-home-locations*))))
+
+(defun &load-player-home-locations ()
+  (with-open-file (db #P"../data/player-home-locations.tna.db"
+		      :direction :input
+		      :if-does-not-exist :create)
+    (loop for entry = (read db nil 'eof) until (equal entry 'eof) collect entry)))
+
+(defun load-player-home-locations ()
+  (setf *player-home-locations* (&load-player-home-locations)))
+
+
+(defun gmsg.com/sethome (tn name &rest args)
+  (declare (ignore tn args))
+  (if (< (calculate-modified-coins name) *sethome-coin-cost*)
+      (server-pm-format name "sorry, ~a, you need ~d coins to use sethome."
+			 name *sethome-coin-cost*)
+      (progn
+	(let* ((lp-results (lookup-player-lp name))
+	       (loc-string (third lp-results))
+	       (loc-xyz
+		(register-groups-bind
+		    (x y z)
+		    ("^\\(([0-9|-|\\.]+)\\,\\s([0-9|-|\\.]+)\\,\\s([0-9|\\.|-]+)\\)$"
+		     loc-string)
+		  (list x y z))))
+	  (setf *player-home-locations*
+		(remove-if
+		 (lambda (y) (string-equal (car y) name))
+		 *player-home-locations*))
+	  (setf *player-home-locations*
+		(push (cons name loc-xyz) *player-home-locations*))
+	  (add-player-transaction name (* -1 *sethome-coin-cost*) "/sethome")
+	  (server-pm-format name "okay, ~a, your home is set to ~a, ~a, ~a for ~d coins."
+			     name
+			     (first loc-xyz) (second loc-xyz) (third loc-xyz)
+			     *sethome-coin-cost*)
+	  (save-player-home-locations)))))
+
+(defun gmsg.com/home (tn name &rest args)
+  (declare (ignore args))
+  (let ((home-assoc (assoc name *player-home-locations* :test #'string-equal)))
+    (when (< (calculate-modified-coins name) *home-coin-cost*)
+      (return-from gmsg.com/home
+	(server-pm-format name "sorry, ~a, you need ~d coins to use /home."
+			   name
+			   *home-coin-cost*)))
+    (when home-assoc
+      (let ((xc (ceiling (read-from-string (second home-assoc))))
+	    (yc (1+ (ceiling (read-from-string (third home-assoc)))))
+	    (zc (ceiling (read-from-string (fourth home-assoc)))))
+	(server-pm-format name "teleporting ~a to ~d, ~d, ~d."
+			   name xc yc zc)
+	(add-player-transaction name (* -1 *home-coin-cost*) "/home")
+	(loop for i from 1 to 3 do
+	     (server-format tn "tele ~a ~d ~d ~d" name xc yc zc)
+	     (sleep (* 0.15 i)))))))
+
+;(defun gmsg.com/home (tn name &rest args)
+;  (declare (ignore tn args))
 
 (defvar *dayvote* nil)
 (defvar *nightvote* nil)
@@ -362,6 +460,8 @@
   (setf *irc-on* nil))
     
 (defun +init+ (telnet-password)
+  (load-player-home-locations)
+  (load-player-transactions)
   (query-connection telnet-password)
   (let ((master-tn
 	 (open-telnet-session *server-address* *server-telnet-port*)))
