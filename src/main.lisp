@@ -294,8 +294,13 @@
 	  (push this-player other-players))
     (save-player-transactions)))
 
-;(defun string-safe-to-read-p (string)
-;  (scan "[
+(defun string-safe-to-read-p (string)
+  (when (stringp string)
+    (let ((str (regex-replace-all "[^0-9|\\.]" string "")))
+      (unless (or
+	       (string-equal str "")
+	       (not (eq (length string) (length str))))
+	str))))
 
 (defun gmsg.com/pay (tn name &rest arg)
   (declare (ignore tn))
@@ -304,7 +309,7 @@
       (server-pm-format name "syntax is /pay <playername> <#-of-coins>")))
   (let* ((arg1 (car arg))
 	 (arg2 (second arg))
-	 (coins (read-from-string arg2)))
+	 (coins (if (string-safe-to-read-p arg2) (read-from-string arg2) 0)))
     (when (< (calculate-modified-coins name) coins)
       (return-from gmsg.com/pay
 	(server-pm-format name "sorry ~a, you've insufficient funds." name)))

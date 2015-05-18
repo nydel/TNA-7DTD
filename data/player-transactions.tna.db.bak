@@ -1,17 +1,61 @@
-("<TVB> Secret Agent Man" (-40 . "misosoup") (-1 . "2dieonisis"))("Comorat"
-                                                                  (-1000
-                                                                   . "supplycrate"))("2dieonisis"
-                                                                                     (-10
-                                                                                      . "splint")
-                                                                                     (-25.0
-                                                                                      . "/home")
-                                                                                     (-100
-                                                                                      . "repairkit")
-                                                                                     (-10
-                                                                                      . "splint")
-                                                                                     (-560
-                                                                                      . "vegetablestew")
-                                                                                     (1
-                                                                                      . "<TVB> Secret Agent Man")
-                                                                                     (-75.0
-                                                                                      . "/sethome"))
+("nonya" (-10 . "splint") (-10 . "splint") (-100 . "mininghelmet")
+ (0 . "2dieonisis") (0 . "2dieonisis"))("2dieonisis" (0 . "nonya")
+                                        (0 . "nonya") (0 . "rookieeyes")
+                                        (0 . "rookieeyes") (0 . "rookieeyes")
+                                        (0 . "rookieeyes") (-1 . "rookieeyes")
+                                        (-100 . "Tsitskie") (100 . "tsitskie")
+                                        (-75 . "nazgarthe")
+                                        (-100 . "mininghelmet")
+                                        (-10 . "splint") (-25.0 . "/home")
+                                        (-100 . "repairkit") (-10 . "splint")
+                                        (-560 . "vegetablestew")
+                                        (1 . "<TVB> Secret Agent Man")
+                                        (-75.0 . "/sethome"))("rookieeyes"
+                                                              (0
+                                                               . "2dieonisis")
+                                                              (0
+                                                               . "2dieonisis")
+                                                              (0
+                                                               . "2dieonisis")
+                                                              (0
+                                                               . "2dieonisis")
+                                                              (1
+                                                               . "2dieonisis")
+                                                              (-100
+                                                               . "mininghelmet")
+                                                              (-700
+                                                               . "oilbarrel"))("Tsitskie"
+                                                                               (100
+                                                                                . "2dieonisis")
+                                                                               (-100
+                                                                                . "2dieonisis"))("Herp A Derp"
+                                                                                                 (-10
+                                                                                                  . "splint"))("xEGxAdam"
+                                                                                                               (-25.0
+                                                                                                                . "/home")
+                                                                                                               (-25.0
+                                                                                                                . "/home")
+                                                                                                               (-25.0
+                                                                                                                . "/home")
+                                                                                                               (-75.0
+                                                                                                                . "/sethome"))("nazgarthe"
+                                                                                                                               (-1000
+                                                                                                                                . "blep")
+                                                                                                                               (1000
+                                                                                                                                . "blip")
+                                                                                                                               (75
+                                                                                                                                . "2dieonisis")
+                                                                                                                               (-75.0
+                                                                                                                                . "/sethome")
+                                                                                                                               (-1000
+                                                                                                                                . "supplycrate"))("Vvgamepro"
+                                                                                                                                                  (1000
+                                                                                                                                                   . "blip"))("<TVB> Secret Agent Man"
+                                                                                                                                                              (-35
+                                                                                                                                                               . "vegetablestew")
+                                                                                                                                                              (-40
+                                                                                                                                                               . "misosoup")
+                                                                                                                                                              (-1
+                                                                                                                                                               . "2dieonisis"))("Comorat"
+                                                                                                                                                                                (-1000
+                                                                                                                                                                                 . "supplycrate"))
