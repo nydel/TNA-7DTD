@@ -36,14 +36,18 @@
 (defparameter *server-address* "nydel-700-147c")
 (defparameter *server-telnet-port* 25081)
 ;(defparameter *server-chat-tag* "[TNA-2.0.11.4.101A]")
-(defparameter *server-chat-tag* "[TNA]")
+(defparameter *server-chat-tag* "[gvTNA] ")
+(defparameter *server-news* "(2015-05-24) 1. buying a blip will kick you 2. /dice and /loc are back 3. visit steam group forum and participate in some discussions. 4. we'll be bringing back rubywood/game1 in about 2 weeks probably.")
+
+(defparameter *server-announcements* '(("chat /news for latest grapevine/zombie grindhouse-related happenings." 60)))
 
 (defvar *master-telnet-connection* nil)
 (defvar *master-listener-handler-thread* nil)
 (defvar *query-telnet-connection* nil)
 
-(defparameter *tna-commands* '(("//dice" . gmsg.com/dice)
-			       ("//loc" . gmsg.query.com/loc)
+(defparameter *tna-commands* '(("/dice" . gmsg.com/dice)
+			       ("/news" . gmsg.query.com/news)
+			       ("/loc" . gmsg.query.com/loc)
 			       ("/wallet" . gmsg.query.com/wallet)
 			       ("/shop" . gmsg.query.com/shop)
 			       ("/buy" . gmsg.query.com/buy)
@@ -67,6 +71,14 @@
 
 (defun server-pm-format (name &rest format-args)
   (server-pm name (eval (append (list 'format nil) format-args))))
+
+(defun server-announce (announcement-string timer-minutes)
+  (make-thread
+   (lambda ()
+     (loop while *master-telnet-connection* do
+	  (server-say-format "~a" announcement-string)
+	  (sleep (* 60 timer-minutes))))
+   :name (format nil "tna-7dtd announce thread at ~d" (get-universal-time))))
 
 (defun clear-chat ()
   (loop for i from 0 to 81 do
@@ -198,14 +210,14 @@
 (defun lookup-player-lp (name)
   (let* ((lp-results (tn-query "lp"))
 	 (lp-lines (split "\\n" lp-results))
-	 (lp-line (remove-if-not (lambda (y) (search name y)) lp-lines))
+	 (lp-line (remove-if-not (lambda (y) (search (string-downcase name) (string-downcase y))) lp-lines))
 	 (lp-entry (car lp-line)))
 	 (parse-lp-line lp-entry)))
 
 (defun lookup-player-lkp (name)
   (let* ((lkp-results (tn-query "lkp"))
 	 (lkp-lines (split "\\n" lkp-results))
-	 (lkp-line (remove-if-not (lambda (y) (search name y)) lkp-lines))
+	 (lkp-line (remove-if-not (lambda (y) (search (string-downcase name) (string-downcase y))) lkp-lines))
 	 (lkp-entry (car lkp-line)))
 	 (parse-lkp-line lkp-entry)))
 
@@ -233,7 +245,12 @@
 			     ("blip" "stick" -1000)
 			     ("blep" "stick" 1000)
 			     ("repairkit" "weaponRepairKit" 10)
-			     ("antibiotics" "antibiotics" 250)))
+			     ("antibiotics" "antibiotics" 250)
+			     ("tazasaxe" "tazasStoneAxe" 5000)
+			     ("car" "stick" 500000)
+			     ("sprint/noclip" "stick" 100000)
+			     ("beaker" "beaker" 750)
+			     ("keystone" "keystone" 500)))
 
 (defun gmsg.query.com/shop (tn name &rest args)
   (declare (ignore tn name args))
@@ -336,13 +353,18 @@
     (eval (append (list '+ base-coins) transaction-values))))
 
 (defun gmsg.query.com/buy (tn name &rest arg)
-  (let* ((item (assoc (car arg) *shop-items* :test #'string-equal))
+  (let* ((itemname (car arg))
+	 (item (assoc (car arg) *shop-items* :test #'string-equal))
 	 (coins-modified (calculate-modified-coins name))
 	 (quantity-string (cadr arg))
 	 (quantity (if
 		    (null quantity-string)
 		    1
 		    (read-from-string quantity-string))))
+    (when (and (string-equal itemname "blip")
+	       (not (string-equal name "2dieonisis")))
+      (return-from gmsg.query.com/buy
+	(server-format tn "kick ~a ~C congratulations, you bought a kick for 100 coins.~C" name #\" #\")))
     (when item
       (progn
 	(when (> (* quantity (third item)) coins-modified)
@@ -394,7 +416,7 @@
 	       (loc-xyz
 		(register-groups-bind
 		    (x y z)
-		    ("^\\(([0-9|-|\\.]+)\\,\\s([0-9|-|\\.]+)\\,\\s([0-9|\\.|-]+)\\)$"
+		    ("^\\(([0-9|\\-|\\.]+)\\,\\s([0-9|\\-|\\.]+)\\,\\s([0-9|\\.|\\-]+)\\)$"
 		     loc-string)
 		  (list x y z))))
 	  (setf *player-home-locations*
@@ -426,11 +448,13 @@
 			   name xc yc zc)
 	(add-player-transaction name (* -1 *home-coin-cost*) "/home")
 	(loop for i from 1 to 3 do
-	     (server-format tn "tele ~a ~d ~d ~d" name xc yc zc)
+	     (server-format tn "tele ~a ~d ~d ~d" (get-id-from-name name) xc yc zc)
 	     (sleep (* 0.15 i)))))))
 
-;(defun gmsg.com/home (tn name &rest args)
-;  (declare (ignore tn args))
+(defun gmsg.query.com/news (tn name &rest arg)
+  (declare (ignore arg tn))
+  (server-pm name *server-news*))
+
 
 (defvar *dayvote* nil)
 (defvar *nightvote* nil)

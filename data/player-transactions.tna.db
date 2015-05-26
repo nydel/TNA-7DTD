@@ -1,84 +1,457 @@
-("nonya" (-10 . "splint") (-10 . "splint") (-10 . "splint")
- (-100 . "mininghelmet") (0 . "2dieonisis") (0 . "2dieonisis"))("2dieonisis"
-                                                                (0 . "nonya")
-                                                                (0 . "nonya")
-                                                                (0
-                                                                 . "rookieeyes")
-                                                                (0
-                                                                 . "rookieeyes")
-                                                                (0
-                                                                 . "rookieeyes")
-                                                                (0
-                                                                 . "rookieeyes")
-                                                                (-1
-                                                                 . "rookieeyes")
-                                                                (-100
-                                                                 . "Tsitskie")
-                                                                (100
-                                                                 . "tsitskie")
-                                                                (-75
-                                                                 . "nazgarthe")
-                                                                (-100
-                                                                 . "mininghelmet")
-                                                                (-10
-                                                                 . "splint")
-                                                                (-25.0
-                                                                 . "/home")
-                                                                (-100
-                                                                 . "repairkit")
-                                                                (-10
-                                                                 . "splint")
-                                                                (-560
-                                                                 . "vegetablestew")
-                                                                (1
-                                                                 . "<TVB> Secret Agent Man")
-                                                                (-75.0
-                                                                 . "/sethome"))("rookieeyes"
-                                                                                (0
-                                                                                 . "2dieonisis")
-                                                                                (0
-                                                                                 . "2dieonisis")
-                                                                                (0
-                                                                                 . "2dieonisis")
-                                                                                (0
-                                                                                 . "2dieonisis")
-                                                                                (1
-                                                                                 . "2dieonisis")
-                                                                                (-100
-                                                                                 . "mininghelmet")
-                                                                                (-700
-                                                                                 . "oilbarrel"))("Tsitskie"
-                                                                                                 (100
-                                                                                                  . "2dieonisis")
-                                                                                                 (-100
-                                                                                                  . "2dieonisis"))("Herp A Derp"
-                                                                                                                   (-10
-                                                                                                                    . "splint"))("xEGxAdam"
-                                                                                                                                 (-25.0
-                                                                                                                                  . "/home")
-                                                                                                                                 (-25.0
-                                                                                                                                  . "/home")
-                                                                                                                                 (-25.0
-                                                                                                                                  . "/home")
-                                                                                                                                 (-75.0
-                                                                                                                                  . "/sethome"))("nazgarthe"
-                                                                                                                                                 (-1000
-                                                                                                                                                  . "blep")
-                                                                                                                                                 (1000
-                                                                                                                                                  . "blip")
-                                                                                                                                                 (75
-                                                                                                                                                  . "2dieonisis")
-                                                                                                                                                 (-75.0
-                                                                                                                                                  . "/sethome")
-                                                                                                                                                 (-1000
-                                                                                                                                                  . "supplycrate"))("Vvgamepro"
-                                                                                                                                                                    (1000
-                                                                                                                                                                     . "blip"))("<TVB> Secret Agent Man"
-                                                                                                                                                                                (-35
-                                                                                                                                                                                 . "vegetablestew")
-                                                                                                                                                                                (-40
-                                                                                                                                                                                 . "misosoup")
-                                                                                                                                                                                (-1
-                                                                                                                                                                                 . "2dieonisis"))("Comorat"
+("<TVB> Secret Agent Man" (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home") (-25.0 . "/home")
+ (-75.0 . "/sethome") (-35 . "vegetablestew") (-40 . "misosoup")
+ (-1 . "2dieonisis"))("2dieonisis" (-25.0 . "/home") (-1000 . "comorat")
+                      (-1000 . "blep") (1000 . "blip") (-10 . "splint")
+                      (10000 . "blip") (1000 . "blip") (1000 . "blip")
+                      (-25.0 . "/home") (1000 . "blip")
+                      (-75 . "thorn.dragonstorm") (-75 . "kloroxbleech")
+                      (-25.0 . "/home") (-1000 . "nonya") (-75.0 . "/sethome")
+                      (-75.0 . "/sethome") (0 . "nonya") (0 . "nonya")
+                      (0 . "rookieeyes") (0 . "rookieeyes") (0 . "rookieeyes")
+                      (0 . "rookieeyes") (-1 . "rookieeyes")
+                      (-100 . "Tsitskie") (100 . "tsitskie")
+                      (-75 . "nazgarthe") (-100 . "mininghelmet")
+                      (-10 . "splint") (-25.0 . "/home") (-100 . "repairkit")
+                      (-10 . "splint") (-560 . "vegetablestew")
+                      (1 . "<TVB> Secret Agent Man") (-75.0 . "/sethome"))("comorat"
+                                                                           (1000
+                                                                            . "2dieonisis")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-10000
+                                                                            . "supplycrate")
+                                                                           (10000
+                                                                            . "blip")
+                                                                           (-10000
+                                                                            . "supplycrate")
+                                                                           (8000
+                                                                            . "blip")
+                                                                           (-10000
+                                                                            . "supplycrate")
+                                                                           (20000
+                                                                            . "blip")
+                                                                           (-3000
+                                                                            . "supplycrate")
+                                                                           (-3000
+                                                                            . "supplycrate")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-3000
+                                                                            . "supplycrate")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-2000
+                                                                            . "supplycrate")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-5000
+                                                                            . "supplycrate")
+                                                                           (10000
+                                                                            . "blip")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-10
+                                                                            . "splint")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-3000
+                                                                            . "supplycrate")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-10
+                                                                            . "splint")
+                                                                           (-10
+                                                                            . "splint")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (225
+                                                                            . "error-with-/sethome")
+                                                                           (-25.0
+                                                                            . "/home")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (75
+                                                                            . "error-with-/sethome")
+                                                                           (75
+                                                                            . "error-with-/sethome")
+                                                                           (75
+                                                                            . "error-with-/sethome")
+                                                                           (75
+                                                                            . "error-with-/sethome")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-1000
+                                                                            . "supplycrate")
+                                                                           (-75.0
+                                                                            . "/sethome")
+                                                                           (-1000
+                                                                            . "supplycrate")
+                                                                           (-2000
+                                                                            . "supplycrate")
+                                                                           (10000
+                                                                            . "blip")
+                                                                           (-1000
+                                                                            . "supplycrate"))("nonya"
+                                                                                              (-25.0
+                                                                                               . "/home")
+                                                                                              (-1750
+                                                                                               . "oilbarrel")
+                                                                                              (-1750
+                                                                                               . "oilbarrel")
+                                                                                              (-1400
+                                                                                               . "oilbarrel")
+                                                                                              (-350
+                                                                                               . "oilbarrel")
+                                                                                              (-25.0
+                                                                                               . "/home")
+                                                                                              (1000
+                                                                                               . "2dieonisis")
+                                                                                              (-10
+                                                                                               . "splint")
+                                                                                              (-10
+                                                                                               . "splint")
+                                                                                              (-10
+                                                                                               . "splint")
+                                                                                              (-35
+                                                                                               . "vegetablestew")
+                                                                                              (-35
+                                                                                               . "vegetablestew")
+                                                                                              (-25.0
+                                                                                               . "/home")
+                                                                                              (-75.0
+                                                                                               . "/sethome")
+                                                                                              (-350
+                                                                                               . "oilbarrel")
+                                                                                              (-10
+                                                                                               . "splint")
+                                                                                              (-10
+                                                                                               . "splint")
+                                                                                              (-10
+                                                                                               . "splint")
+                                                                                              (-100
+                                                                                               . "mininghelmet")
+                                                                                              (0
+                                                                                               . "2dieonisis")
+                                                                                              (0
+                                                                                               . "2dieonisis"))("xselenax"
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-25.0
+                                                                                                                 . "/home")
+                                                                                                                (-75.0
+                                                                                                                 . "/sethome"))("Alvestam"
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (1000
+                                                                                                                                 . "blip")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-100
+                                                                                                                                 . "mininghelmet")
+                                                                                                                                (-75.0
+                                                                                                                                 . "/sethome")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (1000
+                                                                                                                                 . "blip")
+                                                                                                                                (1000
+                                                                                                                                 . "blip")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (1000
+                                                                                                                                 . "blip")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (1000
+                                                                                                                                 . "blip")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (1000
+                                                                                                                                 . "blip")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-10
+                                                                                                                                 . "splint")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-100
+                                                                                                                                 . "mininghelmet")
+                                                                                                                                (-1000
+                                                                                                                                 . "supplycrate")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-25.0
+                                                                                                                                 . "/home")
+                                                                                                                                (-100
+                                                                                                                                 . "mininghelmet")
+                                                                                                                                (-75.0
+                                                                                                                                 . "/sethome")
+                                                                                                                                (-10
+                                                                                                                                 . "splint"))("KloroxBleech"
+                                                                                                                                              (-25.0
+                                                                                                                                               . "/home")
+                                                                                                                                              (-75.0
+                                                                                                                                               . "/sethome")
+                                                                                                                                              (-100
+                                                                                                                                               . "mininghelmet")
+                                                                                                                                              (-25.0
+                                                                                                                                               . "/home")
+                                                                                                                                              (-75.0
+                                                                                                                                               . "/sethome")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-25.0
+                                                                                                                                               . "/home")
+                                                                                                                                              (-75.0
+                                                                                                                                               . "/sethome")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-25.0
+                                                                                                                                               . "/home")
+                                                                                                                                              (0
+                                                                                                                                               . "thorn.dragonstorm")
+                                                                                                                                              (0
+                                                                                                                                               . "thorn.dragonstorm")
+                                                                                                                                              (75
+                                                                                                                                               . "2dieonisis")
+                                                                                                                                              (-75.0
+                                                                                                                                               . "/sethome")
+                                                                                                                                              (1000
+                                                                                                                                               . "blip")
+                                                                                                                                              (1000
+                                                                                                                                               . "blip")
+                                                                                                                                              (-1000
+                                                                                                                                               . "blep")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (1000
+                                                                                                                                               . "blip")
+                                                                                                                                              (1000
+                                                                                                                                               . "blip")
+                                                                                                                                              (-1000
+                                                                                                                                               . "blep")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-25.0
+                                                                                                                                               . "/home")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-25.0
+                                                                                                                                               . "/home")
+                                                                                                                                              (-75.0
+                                                                                                                                               . "/sethome")
+                                                                                                                                              (-75.0
+                                                                                                                                               . "/sethome")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (-10
+                                                                                                                                               . "splint")
+                                                                                                                                              (100
+                                                                                                                                               . "2dieonisis")
+                                                                                                                                              (-100
+                                                                                                                                               . "2dieonisis"))("thorn.dragonstorm"
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-500
+                                                                                                                                                                 . "repairkit")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-1000
+                                                                                                                                                                 . "supplycrate")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (1000
+                                                                                                                                                                 . "blip")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (-25.0
+                                                                                                                                                                 . "/home")
+                                                                                                                                                                (0
+                                                                                                                                                                 . "KloroxBleech")
+                                                                                                                                                                (0
+                                                                                                                                                                 . "KloroxBleech")
+                                                                                                                                                                (75
+                                                                                                                                                                 . "2dieonisis")
+                                                                                                                                                                (-75.0
+                                                                                                                                                                 . "/sethome")
+                                                                                                                                                                (-500
+                                                                                                                                                                 . "forgeahead"))("XlViciouslX"
+                                                                                                                                                                                  (-75.0
+                                                                                                                                                                                   . "/sethome"))("nazgarthe"
+                                                                                                                                                                                                  (-25.0
+                                                                                                                                                                                                   . "/home")
+                                                                                                                                                                                                  (-25.0
+                                                                                                                                                                                                   . "/home")
+                                                                                                                                                                                                  (-10
+                                                                                                                                                                                                   . "splint")
                                                                                                                                                                                                   (-1000
-                                                                                                                                                                                                   . "supplycrate"))
+                                                                                                                                                                                                   . "blep")
+                                                                                                                                                                                                  (1000
+                                                                                                                                                                                                   . "blip")
+                                                                                                                                                                                                  (75
+                                                                                                                                                                                                   . "2dieonisis")
+                                                                                                                                                                                                  (-75.0
+                                                                                                                                                                                                   . "/sethome")
+                                                                                                                                                                                                  (-1000
+                                                                                                                                                                                                   . "supplycrate"))("rookieeyes"
+                                                                                                                                                                                                                     (0
+                                                                                                                                                                                                                      . "2dieonisis")
+                                                                                                                                                                                                                     (0
+                                                                                                                                                                                                                      . "2dieonisis")
+                                                                                                                                                                                                                     (0
+                                                                                                                                                                                                                      . "2dieonisis")
+                                                                                                                                                                                                                     (0
+                                                                                                                                                                                                                      . "2dieonisis")
+                                                                                                                                                                                                                     (1
+                                                                                                                                                                                                                      . "2dieonisis")
+                                                                                                                                                                                                                     (-100
+                                                                                                                                                                                                                      . "mininghelmet")
+                                                                                                                                                                                                                     (-700
+                                                                                                                                                                                                                      . "oilbarrel"))("xEGxAdam"
+                                                                                                                                                                                                                                      (-25.0
+                                                                                                                                                                                                                                       . "/home")
+                                                                                                                                                                                                                                      (-25.0
+                                                                                                                                                                                                                                       . "/home")
+                                                                                                                                                                                                                                      (-25.0
+                                                                                                                                                                                                                                       . "/home")
+                                                                                                                                                                                                                                      (-75.0
+                                                                                                                                                                                                                                       . "/sethome"))("Vvgamepro"
+                                                                                                                                                                                                                                                      (1000
+                                                                                                                                                                                                                                                       . "blip"))
